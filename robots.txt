@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /
+
+
+= LeDoux Security = 
+
+This site was made by a human, for humans.
+                            - Kylar LeDoux
