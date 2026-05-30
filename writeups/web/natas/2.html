@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>web writeups</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body>
+    <div class="page">
+
+        <h1>Natas2</h1>
+        <div class="sub">Finding hidden resources via directory listing</div>
+        
+        <div class="divider"></div>
+
+        <p>
+            When you open this challenge, you are greeted with the familiar message: “There is nothing on this page.”<br>
+            <img src="media/natas2.png" alt="Natas 2 challenge page">
+
+            As with the previous challenges, we start by viewing the page source.<br>
+            At first glance, nothing seems interesting. It’s not the usual “The password is: ___” comment.<br>
+            However, there is something notable on line 15.<br>
+
+            <img src="media/line15.png" alt="Line 15 of Natas 2">
+
+            This reveals a directory we previously didn’t know about: <code>/files</code>.<br>
+
+            <img src="media/filesindex.png" alt="Index of /files">
+
+            Visiting this directory shows two files: <code>pixel.png</code> and a new file, <code>users.txt</code>.
+            <img src="media/userstxt.png" alt="/files/users.txt">
+            After accessing <code>/users.txt</code>, we are shown several usernames and passwords. One of which is the password for Natas 3.<br>
+            <code>3gqisGdR0pjm6tpkDKdIWO2hSvchLeYH</code>
+        </p>
+
+
+        <div class="divider"></div>
+        <a href="index.html">Back</a>
+    </div>
+
+    <footer style="text-align:center; margin-top:60px; font-size:12px; opacity:0.5;">
+        © 2026 LeDoux Security. All rights reserved.
+    </footer>
+</body>
+
+</html> 

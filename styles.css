@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
 body {
     margin: 0;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Inter', serif;
+    letter-spacing: 0.2px;
     background: #0b0f14;
     color: #e6e6e6;
 }
@@ -57,4 +60,32 @@ a:hover {
     opacity: 0.55;
     line-height: 1.5;
     max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+p {
+    margin: 10px auto;
+    font-size: 15px;
+    line-height: 1.6;
+    opacity: 0.78;
+    max-width: 520px;
+    text-align: left;
+}
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 16px auto;
+    border-radius: 6px;
+    opacity: 0.95;
+}
+code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #e6e6e6;
+    letter-spacing: 0.2px;
 }
