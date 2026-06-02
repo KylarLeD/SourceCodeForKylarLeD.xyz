@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>natas3</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body>
+    <div class="page">
+
+        <h1>Natas3</h1>
+        <div class="sub">Finding hidden resources via robots.txt</div>
+        
+        <div class="divider"></div>
+
+        <p>
+            By now, you should understand the basic layout of these challenges, so for now I'll skip the homepage details until a new page is shown.<br>
+            After viewing the page source you are shown this:<br>
+            <img src="media/pagesource1.png" alt="natas 3 source view">
+            As you can see, on line 15 there is a comment that says<br>
+            "No more information leaks!! Not even Google will find it this time..."<br><br>
+            This hint points us to the <code>robots.txt</code> file because it is used to tell Google and other search engine crawlers which parts of a website they are forbidden to index. By claiming 'not even Google will find it,' the challenge is hinting that they hid the directory using this exact file.<br>
+            And after visiting <code>natas3.natas.labs.overthewire.org/robots.txt</code> we are shown the following:<br>
+            <img src="media/robots.png" alt="natas3/robots.txt file">
+            And after going to <code>natas3.natas.labs.overthewire.org/s3cr3t/</code>:<br>
+            <img src="media/supasecret.png" alt="natas/s3cr3t/ directory">
+            And finally, after clicking the <code>users.txt</code> file:<br>
+            <img src="media/natas4pass.png" alt="s3cr3t/users.txt file">
+            We are shown the password for Natas 4.<br>
+            <code>QryZXc2e0zahULdHrtHxzyYkj59kUxLQ</code>
+        </p>
+
+
+        <div class="divider"></div>
+        <a href="index.html">Back</a>
+    </div>
+
+    <footer style="text-align:center; margin-top:60px; font-size:12px; opacity:0.5;">
+        © 2026 LeDoux Security. All rights reserved.
+    </footer>
+</body>
+
+</html> 

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>natas3</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body>
+    <div class="page">
+
+        <h1>Natas4</h1>
+        <div class="sub">HTTP header spoofing with curl</div>
+        
+        <div class="divider"></div>
+
+        <p>
+            Upon opening this page, you're greeted with a new message:<br>
+            <img src="media/natas4.png" alt="natas 4 page">
+            This challenge focuses on understanding what HTTP headers are and how they are used in web requests.<br><br>
+            HTTP headers are pieces of extra information sent between your browser and a server whenever you visit a website. They don’t show up on the page itself, but they help describe things like who is making the request and how the server should respond.<br><br>
+            Here are some examples of what an http header might store:<br>
+        </p>
+        <ul>
+            <li><b>User-Agent</b>: Mozilla/5.0 (Identifies the browser used)</li>
+            <li><b>Referer</b>: https://google.com (Indicates the previous page the request came from)</li>
+            <li><b>Server</b>: Apache (Identifies the web server software)</li>
+        </ul>
+        <p>
+            You can learn more about HTTP headers here:<br>
+            <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers" target="_blank">
+                MDN Web Docs – HTTP Headers
+            </a><br><br>
+
+            But for now, we'll focus on the <code>Referer</code> header.<br>
+            Since this value is controlled by the client, it can be modified manually using tools like <code>curl</code>.
+        </p>
+
+        <div class="note">
+            You <i>can</i> use <b>Burp Suite</b> for this, but in this tutorial we use <b>curl</b> to help understand what's actually happening.
+        </div>
+        <br>
+
+        <p>
+            Since we cannot directly access <code>http://natas5.natas.labs.overthewire.org/</code> yet, we need to make the request appear as if it came from that page.<br><br>
+
+            This is done using the following <code>curl</code> command:<br><br>
+
+            <code>curl http://natas4.natas.labs.overthewire.org/ -u natas4 -H "Referer: http://natas5.natas.labs.overthewire.org/"</code><br><br>
+
+            This command sends a request to the target page, authenticates using the <code>-u</code> flag with the username <code>natas4</code>, and then modifies the request using the <code>-H</code> flag to add a custom <code>Referer</code> header.<br>
+            This tricks the server into believing the request originated from the allowed page.<br>
+            Here is the command in action:
+            <img src="media/curlcommand.png" alt="curl command being used in command prompt">
+            After running the command, we can see that the password for Natas 5 is:<br>
+            <code>0n35PkggAPm2zbEpOU802c0x0Msn1ToK</code>
+        </p>
+
+
+        <div class="divider"></div>
+        <a href="index.html">Back</a>
+    </div>
+
+    <footer style="text-align:center; margin-top:60px; font-size:12px; opacity:0.5;">
+        © 2026 LeDoux Security. All rights reserved.
+    </footer>
+</body>
+
+</html> 
