@@ -196,3 +196,36 @@ footer {
         padding-left: 10px;
     }
 }
+.image-carousel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    margin: 24px auto;
+}
+
+.image-carousel img {
+    max-width: calc(100% - 80px);
+    max-height: 500px;
+    width: auto;
+    height: auto;
+    border-radius: 6px;
+    margin: 0;
+}
+
+.image-carousel button {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    color: #e6e6e6;
+    font-size: 28px;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: 0.15s ease;
+    padding: 8px;
+}
+
+.image-carousel button:hover {
+    opacity: 1;
+}

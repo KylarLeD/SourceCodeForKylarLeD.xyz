@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>euclid</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body>
+    <div class="page">
+
+        <h1>Euclid</h1>
+        <div class="sub">A terminal-based geometry assistant written in Python<br>Try Euclid on <a href="https://github.com/KylarLeD/Euclid/">Github</a></div>
+        
+        <!--Code Refactor-->
+        <div class="divider"></div>
+        <h2>Small Code Refactor - 7.31.26</h2>
+        
+        <ul>
+            <li>Refactored menu logic with function dictionary.</li>
+            <li>Added clearScreen function to avoid repeating<br><code>print("\033c", end="")</code></li><br>
+            Refactored menu logic example:<br><br>before:
+        
+        <pre>
+if shape == 1:
+    circleCalculator()
+elif shape == 2:
+    squareCalculator()
+elif shape == 3:
+    rectangleCalculator()
+elif shape == 4:
+    triangleCalculator()
+elif shape == 5:
+    polygonCalculator()
+elif shape == 6:
+    print("\033c", end="")
+    return
+        </pre>
+        after:
+        <pre>
+shape_options = {
+    1: circleCalculator,
+    2: squareCalculator,
+    3: rectangleCalculator,
+    4: triangleCalculator,
+    5: polygonCalculator    
+}
+
+if shape == 6:
+    clearScreen() - execute's print("\033c", end="") to clear the terminal screen.
+    return
+
+if shape == 112512118:
+    masthead()
+
+elif shape in shape_options:
+    shape_options[shape]()
+        </pre>
+        As you can see, the updated code is much more maintainable. Using a function dictionary removes repetitive logic and makes adding new shapes easier in the future.
+        </ul>
+        
+
+        <!--Square Calculator update-->
+        <div class="divider"></div>
+        <h2>Squares Squares Squares - 7.21.26</h2>
+        
+        
+        <ul>
+            <li>Added functionality to squareCalculator function.</li>
+            <li>Allows you to calculate a square’s side, diagonal, area, and perimeter.</li>
+            Try Euclid on <a href="https://github.com/KylarLeD/Euclid">Github</a>
+        </ul>
+        <img src="media/squares.png" alt="Gallery image">
+
+        <!--7.20.26-->
+        <div class="divider"></div>
+
+        <h2>Introduction - 7.20.26</h2>
+        <p>
+            Euclid is a Python program that solves basic geometric calculations.<br>
+            Currently, the main menu and circle menu are built, along with the "solve for area" flow, which handles input from radius, diameter, or circumference. Placeholders are in place for the remaining circle calculations (circumference, diameter, radius) as well as for the other shapes (square, rectangle, triangle, polygon). I'll be adding more soon, getting basic functionality down before I dive into looks. I also plan on make a GUI version with PySide6 in the future.
+            
+            <div class="image-carousel">
+                <button onclick="changeImage(-1)">&lt;</button>
+                <img id="carousel-image" src="media/euclid.png" alt="Gallery image">
+                <button onclick="changeImage(1)">&gt;</button>
+            </div>
+        </p>
+        <script>
+        const images = [
+            "media/euclid.png",
+            "media/circles.png",
+            "media/measure.png"
+        ];
+
+        let currentImage = 0;
+
+        function changeImage(direction) {
+            currentImage += direction;
+
+            if (currentImage < 0) {
+                currentImage = images.length - 1;
+            }
+
+            if (currentImage >= images.length) {
+                currentImage = 0;
+            }
+
+            document.getElementById("carousel-image").src = images[currentImage];
+        }
+        </script>
+
+        <div class="divider"></div>
+        <a href="../../index.html">Home</a>
+    </div>
+</body>
+
+</html> 
