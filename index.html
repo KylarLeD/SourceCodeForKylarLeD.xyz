@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LeDoux Security</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -30,7 +31,7 @@
 
         <div class="divider"></div>
 
-        <h2>Writeups & Documentation</h2>
+        <h2>Writeups & Blogs</h2>
                 <ul>
                     <li><a href="writeups/natas/index.html">OverTheWire Natas Challenges</a></li>
                 </ul>
@@ -58,15 +59,18 @@
 
         <h2>Contact</h2>
         <ul>
-            <li><a href="mailto:ledouxkylar@gmail.com">LeDouxKylar@gmail.com</a></li>
+            <li><a href="mailto:kylar@ledouxsec.com">kylar@ledouxsec.com</a></li>
             <li><a href="https://www.linkedin.com/in/kylarledoux/" target="_blank">LinkedIn.com/in/KylarLeDoux/</a></li>
             <li><a href="https://github.com/kylarled" target="_blank">GitHub.com/KylarLeD</a></li>
         </ul>
 
     </div>
     <footer style="text-align:center; margin-top:60px; font-size:12px; opacity:0.5;">
-        © 2026 LeDoux Security. All rights reserved.
+    &copy; <span id="copyright-year"></span> LeDoux Security. All rights reserved.
     </footer>
+    <script>
+        document.getElementById("copyright-year").textContent = new Date().getFullYear();
+    </script>
 </body>
 
 </html>
