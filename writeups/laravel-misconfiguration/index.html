@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finding Exposed Student Data on a Nursing College Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body>
+    <div class="page">
+        <h1>Finding Exposed Student Data on a Nursing College Portal</h1>
+        <div class="sub">Responsible Disclosure - July 31st, 2026</div>
+        
+        <div class="divider"></div>
+        <h1>Disclaimer</h1>
+        <p>
+            This writeup documents a vulnerability identified through observation of <strong>publicly accessible resources</strong> during security research.
+            <strong>No authentication was bypassed</strong>, no vulnerabilities were exploited beyond confirming the exposure, and <strong>no sensitive data was downloaded, retained, or shared</strong>.
+        </p>
+
+        <p>
+            The vulnerability was <strong>reported responsibly</strong> to the affected organization prior to publication and has since been <strong>remediated</strong>. Any identifying information has been redacted where appropriate.
+        </p>
+
+        <p>
+            This writeup is provided for educational and defensive security purposes only.
+        </p>
+        
+        <div class="divider"></div>
+        <h2>How It Started</h2>
+        <p>
+            I wasn't targeting this site specifically. I was doing general recon practice and browsing public-facing web apps, as well as checking for common misconfigurations.
+        </p>
+
+        <p>I ended up on <code>[redacted]/portal/login</code>, the student portal for a nursing college in Ghana.</p>
+
+        <p>I started reconnaissance on the application using browser developer tools and noticed the logo tag:</p>
+        
+        <pre><code>&lt;img src="public/img/yamfo/crest.jpg" style="width:200px;height:auto"&gt;</code></pre>
+
+        <p>
+            That relative path was interesting because it revealed part of the application's directory structure. I started looking into how the application was loading its resources and used the network tab to map out publicly accessible files. While reviewing the requests being made by the application, one GET request stood out:
+        </p>
+
+        <pre><code>GET /portal/public/gadwork/js/modules/materialadmin/libs/jquery/jquery-1.11.2.min.js</code></pre>
+
+        <p>
+            That gave me a full path to work with. I started reviewing the application's structure from <code>/portal/public/</code>, which led to the discovery that directory listing was enabled.
+        </p>
+
+        <div class="divider"></div>
+        <h2>Finding  1 - Directory Listing Enabled</h2>
+        <p class="note">/portal/public/gadwork/js/modules/materialadmin/</p>
+
+        <p>
+            The server was exposing a browsable file tree without any access restrictions, allowing anyone to view the application's internal JavaScript module structure.
+        </p>
+        <pre><code>Index of /portal/public/gadwork/js/modules/materialadmin/
+├── core/
+└── libs/</code></pre>
+        
+        <p>
+            This is a classic web server misconfiguration. When directory listing is enabled, the application's file structure can be viewed without authentication.
+        </p>
+        
+        <p>
+            From a reconnaissance perspective, this reveals details about the technologies in use, the organization of application resources, and provides additional insight into the application's exposed surface.
+        </p>
+
+        <p>
+            The JavaScript assets themselves are not inherently sensitive. The issue is the directory <strong>listing</strong>, which exposes the application's file structure and provides unnecessary insight into its internal organization. 
+        </p>
+        
+        <p>
+            Since the server is running LiteSpeed, directory indexing should be disabled at the web server level and verified to ensure internal application directories are not publicly accessible.
+        </p>
+
+        <div class="divider"></div>
+        <h2>Finding 2 - Public Laravel Log Files</h2>
+        <p class="note">/portal/storage/logs/</p>
+
+        <p>While reviewing additional exposed directories, I discovered a far more significant issue.</p>
+
+        <p>
+            The <code>/storage/logs/</code> directory should <strong>never</strong> be publicly accessible in a Laravel application. In this case, <strong>it was</strong>. Directory listing was enabled here as well, revealing a collection of daily log files.
+        </p>
+
+        <pre><code>laravel-2026-05-13.log
+laravel-2026-05-14.log
+laravel-2026-05-15.log
+...</code></pre>
+
+        <p>I opened one of the log files to confirm the exposure. A typical entry looked like this:</p>
+        <pre><code>[2026-05-15 07:35:08] local.INFO: Student Logged_in (by user_id xxxx)
+Array
+(
+    [ipAddress] => xxx.xxx.xxx.xxx
+)</code></pre>
+
+        <p>
+            The logs recorded student activity such as logins, with each entry containing the student's user ID and IP address. Additional entries showed activity across different areas of the portal, including account actions and other student-facing features, with records spanning multiple days of log files.
+        </p>
+
+        <div class="divider"></div>
+
+        <h2>What was exposed:</h2>
+        <ul>
+            <li><strong>User IDs</strong> — Sequential identifiers associated with student accounts, potentially allowing the range of accounts to be inferred from exposed logs.</li>
+            <li><strong>IP addresses</strong> — Recorded alongside user activity, linking network information to specific sessions.</li>
+            <li><strong>Activity history</strong> — Portal actions recorded in the logs, including account activity, timestamps, and accessed features.</li>
+            <li><strong>Endpoint information</strong> — Portal routes and features referenced within log entries, providing additional insight into the application's structure.</li>
+        </ul>
+
+        <p>
+            This was <strong>sensitive student information</strong> belonging to real people. Their data should <strong>not</strong> be accessible through a public URL with no access control.
+        </p>
+
+        <div class="divider"></div>
+        <h2>Why This Happens in Laravel</h2>
+        <p>
+            Laravel by default stores its logs in <code>/storage/logs/</code>. The framework assumes the web server is configured to only serve files from the<br><code>/public/</code> directory, which is the only directory intended to be directly accessible from the web.
+        </p>
+
+        <p>
+            If the document root is incorrectly pointed at the project root instead of <code>/public/</code>, internal application directories such as <code>storage</code>, <code>config</code>, and <code>vendor</code> may become publicly accessible. This can expose sensitive files that were never intended to be served by the web server.
+        </p>
+
+        <p>
+            In this case, that misconfiguration allowed the application's log files to be accessed directly through a public URL.
+        </p>
+
+        <p>
+            This is a deployment misconfiguration, not a Laravel flaw. Recommended remediation:
+        </p>
+        <ul>
+            <li>Set the web server document root to <code>/portal/public/</code>, not <code>/portal/</code>.</li>
+            <li>Restrict direct access to <code>/storage/</code> through web server configuration as an additional safeguard.</li>
+            <li>Disable directory listing where it is not required.</li>
+        </ul>
+
+        <div class="divider"></div>
+        <h2>What I Did</h2>
+
+        <ul>
+            <li><strong>Recon</strong> — Reviewed publicly accessible resources. No authentication was bypassed and no automated tools were used.</li>
+            <li><strong>Confirmed</strong> — Opened a single log file to verify the severity of the exposure.</li>
+            <li><strong>No Data</strong> — Did not download, retain, or share any student information.</li>
+            <li><strong>No Abuse</strong> — Did not attempt to access accounts or use exposed identifiers for unauthorized actions.</li>
+            <li><strong>Disclosed</strong> — Sent a responsible disclosure report to the institution containing technical details and remediation recommendations, with a 30-day disclosure window.</li>
+        </ul>
+
+        <div class="divider"></div>
+        <h1>Takeaways</h1>
+
+        <p>
+            Directory listing is easy to dismiss as low severity. "It's just JS files" is a common thought, but this is a good example of why small misconfigurations are worth investigating. The same issue that exposed a JS module folder also exposed the application's log directory, which contained much more sensitive information.
+        </p>
+
+        <p>
+            If you're deploying a Laravel app, make sure your document root points to <code>/public/</code>. Everything outside of that directory should stay private, and it is worth checking your deployment settings before going live.
+        </p>
+
+        <div class="divider"></div>
+        <a href="../../index.html">Home</a>
+    </div>
+</body>
+
+</html> 

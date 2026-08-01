@@ -112,6 +112,45 @@ code {
     letter-spacing: 0.2px;
 }
 
+pre {
+    max-width: 520px;
+    margin: 16px auto;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #e6e6e6;
+    text-align: left;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+}
+
+pre {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+pre::-webkit-scrollbar {
+    height: 6px;
+}
+
+pre::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+pre::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+}
+
 ul {
     margin: 14px auto;
     padding-left: 18px;
